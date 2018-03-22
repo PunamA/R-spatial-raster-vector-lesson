@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="last-modified" content="2018-03-22 20:30:26 +0000">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- meta "search-domain" used for google site search function google_search() -->
+    <meta name="search-domain" value="">
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/lesson.css" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon-dc.ico" />
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+    <title>Intro to Geospatial Data with R: Convert from .csv to a Shapefile in R</title>
+  </head>
+  <body>
+    <div class="container">
+      
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      
+      
+      <a href="http://datacarpentry.org" class="pull-left">
+        <img class="navbar-logo" src="../assets/img/dc-icon-black.svg" alt="Data Carpentry logo" />
+      </a>
+      
+
+      
+      <a class="navbar-brand" href="../">Home</a>
+
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+
+	
+        <li><a href="../conduct/">Code of Conduct</a></li>
+
+	
+        
+        <li><a href="../setup/">Setup</a></li>
+        <li class="dropdown">
+          <a href="../" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Episodes <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            <li><a href="../01-raster-structure/">Intro to Raster Data in R</a></li>
+            
+            <li><a href="../02-raster-plot/">Plot Raster Data in R</a></li>
+            
+            <li><a href="../03-raster-reproject-in-r/">Reproject Raster Data in R</a></li>
+            
+            <li><a href="../04-raster-calculations-in-r/">Raster Calculations in R</a></li>
+            
+            <li><a href="../05-raster-multi-band-in-r/">Work With Multi-Band Rasters in R</a></li>
+            
+            <li><a href="../06-vector-open-shapefile-in-r/">Open and Plot Shapefiles in R</a></li>
+            
+            <li><a href="../07-vector-shapefile-attributes-in-r/">Explore and Plot by Shapefile Attributes</a></li>
+            
+            <li><a href="../08-vector-plot-shapefiles-custom-legend/">Plot Multiple Shapefiles in R</a></li>
+            
+            <li><a href="../09-vector-when-data-dont-line-up-crs/">Handling Spatial Projection & CRS in R</a></li>
+            
+            <li><a href="../10-vector-csv-to-shapefile-in-r/">Convert from .csv to a Shapefile in R</a></li>
+            
+            <li><a href="../11-vector-raster-integration/">Manipulate Raster Data in R</a></li>
+            
+            <li><a href="../12-time-series-raster/">Raster Time Series Data in R</a></li>
+            
+            <li><a href="../13-plot-time-series-rasters-in-r/">Plot Raster Time Series Data in R</a></li>
+            
+            <li><a href="../14-extract-ndvi-from-rasters-in-r/">Derive Values from Raster Time Series</a></li>
+            
+	    <li role="separator" class="divider"></li>
+            <li><a href="../aio/">All in one page (Beta)</a></li>
+          </ul>
+        </li>
+	
+
+	
+	
+        <li class="dropdown">
+          <a href="../" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Extras <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="../reference/">Reference</a></li>
+            
+          </ul>
+        </li>
+	
+
+	
+        <li><a href="../license/">License</a></li>
+	
+	<li><a href="/edit/gh-pages/_episodes/10-vector-csv-to-shapefile-in-r.md">Improve this page <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+	
+      </ul>
+      <form class="navbar-form navbar-right" role="search" id="search" onsubmit="google_search(); return false;">
+        <div class="form-group">
+          <input type="text" id="google-search" placeholder="Search..." aria-label="Google site search">
+        </div>
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+<div class="row">
+  <div class="col-md-1">
+    <h3>
+      
+      <a href="../09-vector-when-data-dont-line-up-crs/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
+      
+    </h3>
+  </div>
+  <div class="col-md-10">
+    
+    <h3 class="maintitle"><a href="../">Intro to Geospatial Data with R</a></h3>
+    
+  </div>
+  <div class="col-md-1">
+    <h3>
+      
+      <a href="../11-vector-raster-integration/"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
+      
+    </h3>
+  </div>
+</div>
+
+<article>
+<div class="row">
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-10">
+    <h1 class="maintitle">Convert from .csv to a Shapefile in R</h1>
+  </div>
+  <div class="col-md-1">
+  </div>
+</div>
+
+
+<blockquote class="testimonial">
+  <h2>Authors</h2>
+    Joseph Stachelek, Leah A. Wasser, Megan A. Jones
+</blockquote>
+
+<blockquote class="objectives">
+  <h2>Overview</h2>
+
+  <div class="row">
+    <div class="col-md-3">
+      <strong>Teaching:</strong> 10 min
+      <br/>
+      <strong>Exercises:</strong> 0 min
+    </div>
+    <div class="col-md-9">
+      <strong>Questions</strong>
+      <ul>
+	
+	<li>
+</li>
+	
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-9">
+      <strong>Objectives</strong>
+      <ul>
+	
+	<li><p>Be able to import .csv files containing x,y coordinate locations into <code class="highlighter-rouge">R</code>.</p>
+</li>
+	
+	<li><p>Know how to convert a .csv to a spatial object.</p>
+</li>
+	
+	<li><p>Understand how to project coordinate locations provided in a Geographic Coordinate System (Latitude, Longitude) to a projected coordinate system (UTM).</p>
+</li>
+	
+	<li><p>Be able to plot raster and vector data in the same plot to create a map.</p>
+</li>
+	
+      </ul>
+    </div>
+  </div>
+
+</blockquote>
+
+<blockquote class="prereq">
+  <h2 id="things-youll-need-to-complete-this-tutorial">Things You’ll Need To Complete This Tutorial</h2>
+  <p><strong>R Skill Level:</strong> Intermediate - you’ve got the basics of <code class="highlighter-rouge">R</code> down.
+You will need the most current version of <code class="highlighter-rouge">R</code> and, preferably, <code class="highlighter-rouge">RStudio</code> loaded
+on your computer to complete this tutorial.</p>
+
+  <h3 id="install-r-packages">Install R Packages</h3>
+
+  <ul>
+    <li><strong>raster:</strong> <code class="highlighter-rouge">install.packages("raster")</code></li>
+    <li>
+      <p><strong>sf:</strong> <code class="highlighter-rouge">install.packages("sf")</code></p>
+    </li>
+    <li><a href="/R/Packages-In-R/">More on Packages in R - Adapted from Software Carpentry.</a></li>
+  </ul>
+
+  <h2 id="data-to-download">Data to Download</h2>
+  <ul>
+    <li><a href="https://ndownloader.figshare.com/files/3708751">Site layout shapefiles</a></li>
+  </ul>
+</blockquote>
+
+<p>This tutorial will review how to import spatial points stored in <code class="highlighter-rouge">.csv</code> (Comma Separated Value) format into <code class="highlighter-rouge">R</code> as an <code class="highlighter-rouge">sf</code> spatial object. We will also reproject data imported from a shapefile format, export this data as a shapefile as well as plot raster and vector data as layers in the same plot.</p>
+
+<h2 id="spatial-data-in-text-format">Spatial Data in Text Format</h2>
+
+<p>The <code class="highlighter-rouge">HARV_PlotLocations.csv</code> file contains <code class="highlighter-rouge">x, y</code> (point) locations for study
+plot where NEON collects data on
+<a href="http://www.neonscience.org/science-design/collection-methods/terrestrial-organismal-sampling" target="_blank"> vegetation and other ecological metrics</a>.
+We would like to:</p>
+
+<ul>
+  <li>Create a map of these plot locations.</li>
+  <li>Export the data in a <code class="highlighter-rouge">shapefile</code> format to share with our colleagues. This
+shapefile can be imported into any GIS software.</li>
+  <li>Create a map showing vegetation height with plot locations layered on top.</li>
+</ul>
+
+<p>Spatial data are sometimes stored in a text file format (<code class="highlighter-rouge">.txt</code> or <code class="highlighter-rouge">.csv</code>). If
+the text file has an associated <code class="highlighter-rouge">x</code> and <code class="highlighter-rouge">y</code> location column, then we can
+convert it into an <code class="highlighter-rouge">sf</code> spatial object. The <code class="highlighter-rouge">sf</code> object allows us to store both the <code class="highlighter-rouge">x,y</code> values that represent the coordinate location
+of each point and the associated attribute data - or columns describing each
+feature in the spatial object.</p>
+
+<p>We will use the <code class="highlighter-rouge">sf</code> and <code class="highlighter-rouge">raster</code> libraries in this tutorial.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># load packages
+library(sf)  # for vector work;
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Linking to GEOS 3.5.0, GDAL 2.2.2, proj.4 4.8.0
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(raster)   # for  raster metadata/attributes
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Loading required package: sp
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># set working directory to data folder
+# setwd("pathToDirHere")
+</code></pre></div></div>
+
+<h2 id="import-csv">Import .csv</h2>
+<p>To begin let’s import <code class="highlighter-rouge">.csv</code> file that contains plot coordinate <code class="highlighter-rouge">x, y</code>
+locations at the NEON Harvard Forest Field Site (<code class="highlighter-rouge">HARV_PlotLocations.csv</code>) in
+<code class="highlighter-rouge">R</code>. Note that we set <code class="highlighter-rouge">stringsAsFactors=FALSE</code> so our data import as a
+<code class="highlighter-rouge">character</code> rather than a <code class="highlighter-rouge">factor</code> class.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Read the .csv file
+plot_locations_HARV &lt;-
+  read.csv("data/NEON-DS-Site-Layout-Files/HARV/HARV_PlotLocations.csv",
+           stringsAsFactors = FALSE)
+
+# look at the data structure
+str(plot_locations_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'data.frame':	21 obs. of  16 variables:
+ $ easting   : num  731405 731934 731754 731724 732125 ...
+ $ northing  : num  4713456 4713415 4713115 4713595 4713846 ...
+ $ geodeticDa: chr  "WGS84" "WGS84" "WGS84" "WGS84" ...
+ $ utmZone   : chr  "18N" "18N" "18N" "18N" ...
+ $ plotID    : chr  "HARV_015" "HARV_033" "HARV_034" "HARV_035" ...
+ $ stateProvi: chr  "MA" "MA" "MA" "MA" ...
+ $ county    : chr  "Worcester" "Worcester" "Worcester" "Worcester" ...
+ $ domainName: chr  "Northeast" "Northeast" "Northeast" "Northeast" ...
+ $ domainID  : chr  "D01" "D01" "D01" "D01" ...
+ $ siteID    : chr  "HARV" "HARV" "HARV" "HARV" ...
+ $ plotType  : chr  "distributed" "tower" "tower" "tower" ...
+ $ subtype   : chr  "basePlot" "basePlot" "basePlot" "basePlot" ...
+ $ plotSize  : int  1600 1600 1600 1600 1600 1600 1600 1600 1600 1600 ...
+ $ elevation : num  332 342 348 334 353 ...
+ $ soilTypeOr: chr  "Inceptisols" "Inceptisols" "Inceptisols" "Histosols" ...
+ $ plotdim_m : int  40 40 40 40 40 40 40 40 40 40 ...
+</code></pre></div></div>
+
+<p>Also note that <code class="highlighter-rouge">plot_locations_HARV</code> is a <code class="highlighter-rouge">data.frame</code> that contains 21 locations (rows) and 15 variables (attributes).</p>
+
+<p>Next, let’s explore the <code class="highlighter-rouge">data.frame</code> to determine whether it contains columns with coordinate values. If we are lucky, our <code class="highlighter-rouge">.csv</code> will contain columns labeled:</p>
+
+<ul>
+  <li>“X” and “Y” OR</li>
+  <li>Latitude and Longitude OR</li>
+  <li>easting and northing (UTM coordinates)</li>
+</ul>
+
+<p>Let’s check out the column <code class="highlighter-rouge">names</code> of our <code class="highlighter-rouge">data.frame</code>.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># view column names
+names(plot_locations_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [1] "easting"    "northing"   "geodeticDa" "utmZone"    "plotID"    
+ [6] "stateProvi" "county"     "domainName" "domainID"   "siteID"    
+[11] "plotType"   "subtype"    "plotSize"   "elevation"  "soilTypeOr"
+[16] "plotdim_m" 
+</code></pre></div></div>
+
+<h2 id="identify-xy-location-columns">Identify X,Y Location Columns</h2>
+
+<p>View the column names, we can see that our <code class="highlighter-rouge">data.frame</code>  that contains several
+fields that might contain spatial information. The <code class="highlighter-rouge">plot_locations_HARV$easting</code>
+and <code class="highlighter-rouge">plot_locations_HARV$northing</code> columns contain coordinate values.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># view first 6 rows of the X and Y columns
+head(plot_locations_HARV$easting)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 731405.3 731934.3 731754.3 731724.3 732125.3 731634.3
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head(plot_locations_HARV$northing)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 4713456 4713415 4713115 4713595 4713846 4713295
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># note that  you can also call the same two columns using their COLUMN NUMBER
+# view first 6 rows of the X and Y columns
+head(plot_locations_HARV[, 1])
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 731405.3 731934.3 731754.3 731724.3 732125.3 731634.3
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head(plot_locations_HARV[, 2])
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 4713456 4713415 4713115 4713595 4713846 4713295
+</code></pre></div></div>
+
+<p>So, we have coordinate values in our <code class="highlighter-rouge">data.frame</code> but in order to convert our
+<code class="highlighter-rouge">data.frame</code> to an <code class="highlighter-rouge">sf</code> object, we also need to know the CRS (projection)
+associated with those coordinate values.</p>
+
+<p>There are several ways to figure out the CRS of spatial data in text format.</p>
+
+<ol>
+  <li>We can check the file <strong>metadata</strong> in hopes that the CRS was recorded in the
+data. For more information on metadata, check out the
+<a href="/R/why-metadata-are-important/">Why Metadata Are Important: How to Work with Metadata in Text &amp; EML Format</a>
+tutorial.</li>
+  <li>We can explore the file itself to see if CRS information is embedded in the
+file header or somewhere in the data columns.</li>
+</ol>
+
+<p>Following the <code class="highlighter-rouge">easting</code> and <code class="highlighter-rouge">northing</code> columns, there is a <code class="highlighter-rouge">geodeticDa</code> and a
+<code class="highlighter-rouge">utmZone</code> column. These appear to contain CRS information
+(<code class="highlighter-rouge">datum</code> and <code class="highlighter-rouge">projection</code>). Let’s view those next.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># view first 6 rows of the X and Y columns
+head(plot_locations_HARV$geodeticDa)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "WGS84" "WGS84" "WGS84" "WGS84" "WGS84" "WGS84"
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head(plot_locations_HARV$utmZone)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "18N" "18N" "18N" "18N" "18N" "18N"
+</code></pre></div></div>
+
+<p>It is not typical to store CRS information in a column. But this particular
+file contains CRS information this way. The <code class="highlighter-rouge">geodeticDa</code> and <code class="highlighter-rouge">utmZone</code> columns
+contain the information that helps us determine the CRS:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">geodeticDa</code>: WGS84  – this is geodetic datum WGS84</li>
+  <li><code class="highlighter-rouge">utmZone</code>: 18</li>
+</ul>
+
+<p>In
+<a href="/03-raster-reproject-in-r/">When Vector Data Don’t Line Up - Handling Spatial Projection &amp; CRS in R</a>
+we learned about the components of a <code class="highlighter-rouge">proj4</code> string. We have everything we need
+to now assign a CRS to our data.frame.</p>
+
+<p>To create the <code class="highlighter-rouge">proj4</code> associated with <code class="highlighter-rouge">UTM Zone 18 WGS84</code> we can look up the
+projection on the
+<a href="http://www.spatialreference.org/ref/epsg/wgs-84-utm-zone-18n/" target="_blank"> spatial reference website</a>
+which contains a list of CRS formats for each projection:</p>
+
+<ul>
+  <li>This link shows
+<a href="http://www.spatialreference.org/ref/epsg/wgs-84-utm-zone-18n/proj4/" target="_blank">the proj4 string for UTM Zone 18N WGS84</a>.</li>
+</ul>
+
+<p>However, if we have other data in the <code class="highlighter-rouge">UTM Zone 18N</code> projection, it’s much
+easier to simply assign the <code class="highlighter-rouge">st_crs()</code> in <code class="highlighter-rouge">proj4</code> format from that object to our
+new spatial object. Let’s import the roads layer from Harvard forest and check
+out its CRS.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Import the line shapefile
+lines_HARV &lt;- st_read("data/NEON-DS-Site-Layout-Files/HARV/HARV_roads.shp")
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `HARV_roads' from data source `/home/travis/build/datacarpentry/R-spatial-raster-vector-lesson/_episodes_rmd/data/NEON-DS-Site-Layout-Files/HARV/HARV_roads.shp' using driver `ESRI Shapefile'
+Simple feature collection with 13 features and 15 fields
+geometry type:  MULTILINESTRING
+dimension:      XY
+bbox:           xmin: 730741.2 ymin: 4711942 xmax: 733295.5 ymax: 4714260
+epsg (SRID):    32618
+proj4string:    +proj=utm +zone=18 +datum=WGS84 +units=m +no_defs
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># view CRS
+st_crs(lines_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Coordinate Reference System:
+  EPSG: 32618 
+  proj4string: "+proj=utm +zone=18 +datum=WGS84 +units=m +no_defs"
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># view extent
+st_bbox(lines_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     xmin      ymin      xmax      ymax 
+ 730741.2 4711942.0  733295.5 4714260.0 
+</code></pre></div></div>
+
+<p>Exploring the data above, we can see that the lines shapefile is in
+<code class="highlighter-rouge">UTM zone 18N</code>. We can thus use the CRS from that spatial object to convert our
+non-spatial <code class="highlighter-rouge">data.frame</code> into an <code class="highlighter-rouge">sf</code> object.</p>
+
+<p>Next, let’s create a <code class="highlighter-rouge">crs</code> object that we can use to define the CRS of our
+<code class="highlighter-rouge">sf</code> object when we create it</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># create crs object
+utm18nCRS &lt;- st_crs(lines_HARV)
+utm18nCRS
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Coordinate Reference System:
+  EPSG: 32618 
+  proj4string: "+proj=utm +zone=18 +datum=WGS84 +units=m +no_defs"
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class(utm18nCRS)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "crs"
+</code></pre></div></div>
+
+<h2 id="csv-to-sf-object">.csv to sf object</h2>
+<p>Next, let’s convert our <code class="highlighter-rouge">data.frame</code> into an <code class="highlighter-rouge">sf</code> object. To do
+this, we need to specify:</p>
+
+<ol>
+  <li>The columns containing X (<code class="highlighter-rouge">easting</code>) and Y (<code class="highlighter-rouge">northing</code>) coordinate values</li>
+  <li>The CRS that the column coordinate represent (units are included in the CRS) - stored in our <code class="highlighter-rouge">utmCRS</code> object.</li>
+</ol>
+
+<p>We will use the <code class="highlighter-rouge">st_as_sf()</code> function to perform the conversion.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># note that the easting and northing columns are in columns 1 and 2
+plot_locations_sp_HARV &lt;- st_as_sf(plot_locations_HARV, coords = c("easting", "northing"), crs = utm18nCRS)
+
+# look at the CRS
+st_crs(plot_locations_sp_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Coordinate Reference System:
+  EPSG: 32618 
+  proj4string: "+proj=utm +zone=18 +datum=WGS84 +units=m +no_defs"
+</code></pre></div></div>
+
+<h2 id="plot-spatial-object">Plot Spatial Object</h2>
+<p>We now have a spatial <code class="highlighter-rouge">R</code> object, we can plot our newly created spatial object.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># plot spatial object
+plot(plot_locations_sp_HARV$geometry,
+     main = "Map of Plot Locations")
+</code></pre></div></div>
+
+<p><img src="../fig/rmd-10-plot-data-points-1.png" title="plot of chunk plot-data-points" alt="plot of chunk plot-data-points" style="display: block; margin: auto;" /></p>
+
+<h2 id="define-plot-extent">Define Plot Extent</h2>
+
+<p>In
+<a href="/R/open-shapefiles-in-R/">Open and Plot Shapefiles in R</a>
+we learned about spatial object <code class="highlighter-rouge">extent</code>. When we plot several spatial layers in
+<code class="highlighter-rouge">R</code>, the first layer that is plotted, becomes the extent of the plot. If we add
+additional layers that are outside of that extent, then the data will not be
+visible in our plot. It is thus useful to know how to set the spatial extent of
+a plot using <code class="highlighter-rouge">xlim</code> and <code class="highlighter-rouge">ylim</code>.</p>
+
+<p>Let’s first create an <code class="highlighter-rouge">sf</code> object from the
+<code class="highlighter-rouge">NEON-DS-Site-Layout-Files/HarClip_UTMZ18</code> shapefile. (If you have completed
+Vector 00-02 tutorials in this
+<a href="/tutorial-series/vector-data-series/">Introduction to Working with Vector Data in R</a>
+series, you can skip this code as you have already created this object.)</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># create boundary object
+aoi_boundary_HARV &lt;- st_read("data/NEON-DS-Site-Layout-Files/HARV/HarClip_UTMZ18.shp")
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `HarClip_UTMZ18' from data source `/home/travis/build/datacarpentry/R-spatial-raster-vector-lesson/_episodes_rmd/data/NEON-DS-Site-Layout-Files/HARV/HarClip_UTMZ18.shp' using driver `ESRI Shapefile'
+Simple feature collection with 1 feature and 1 field
+geometry type:  POLYGON
+dimension:      XY
+bbox:           xmin: 732128 ymin: 4713209 xmax: 732251.1 ymax: 4713359
+epsg (SRID):    32618
+proj4string:    +proj=utm +zone=18 +datum=WGS84 +units=m +no_defs
+</code></pre></div></div>
+
+<p>To begin, let’s plot our <code class="highlighter-rouge">aoiBoundary</code> object with our vegetation plots.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># plot Boundary
+plot(aoi_boundary_HARV$geometry,
+     main = "AOI Boundary\nNEON Harvard Forest Field Site")
+
+# add plot locations
+plot(plot_locations_sp_HARV$geometry,
+     pch = 8, add = TRUE)
+</code></pre></div></div>
+
+<p><img src="../fig/rmd-10-plot-data-1.png" title="plot of chunk plot-data" alt="plot of chunk plot-data" style="display: block; margin: auto;" /></p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># no plots added, why? CRS?
+# view CRS of each
+st_crs(aoi_boundary_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Coordinate Reference System:
+  EPSG: 32618 
+  proj4string: "+proj=utm +zone=18 +datum=WGS84 +units=m +no_defs"
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>st_crs(plot_locations_sp_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Coordinate Reference System:
+  EPSG: 32618 
+  proj4string: "+proj=utm +zone=18 +datum=WGS84 +units=m +no_defs"
+</code></pre></div></div>
+
+<p>When we attempt to plot the two layers together, we can see that the plot
+locations are not rendered. We can see that our data are in the same projection</p>
+<ul>
+  <li>so what is going on?</li>
+</ul>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># view extent of each
+st_bbox(aoi_boundary_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     xmin      ymin      xmax      ymax 
+ 732128.0 4713208.7  732251.1 4713359.2 
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>st_bbox(plot_locations_sp_HARV)
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     xmin      ymin      xmax      ymax 
+ 731405.3 4712845.0  732275.3 4713846.3 
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># add extra space to right of plot area;
+# par(mar = c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+plot(st_convex_hull(st_sfc(st_union(plot_locations_sp_HARV))),
+     col = "purple",
+     xlab = "easting",
+     ylab = "northing", lwd = 8,
+     main = "Extent Boundary of Plot Locations \nCompared to the AOI Spatial Object",
+     ylim = c(4712400, 4714000)) # extent the y axis to make room for the legend
+
+plot(aoi_boundary_HARV$geometry,
+     add = TRUE,
+     lwd = 6,
+     col = "springgreen")
+
+legend("bottomright",
+       #inset = c(-0.5,0),
+       legend = c("Layer One Extent", "Layer Two Extent"),
+       bty = "n",
+       col = c("purple", "springgreen"),
+       cex = .8,
+       lty = c(1, 1),
+       lwd = 6)
+</code></pre></div></div>
+
+<p><img src="../fig/rmd-10-compare-extents-1.png" title="plot of chunk compare-extents" alt="plot of chunk compare-extents" style="display: block; margin: auto;" /></p>
+
+<p>The <strong>extents</strong> of our two objects are <strong>different</strong>. <code class="highlighter-rouge">plot_locations_sp_HARV</code> is
+much larger than <code class="highlighter-rouge">aoi_boundary_HARV</code>. When we plot <code class="highlighter-rouge">aoi_boundary_HARV</code> first, <code class="highlighter-rouge">R</code>
+uses the extent of that object to as the plot extent. Thus the points in the
+<code class="highlighter-rouge">plot_locations_sp_HARV</code> object are not rendered. To fix this, we can manually
+assign the plot extent using <code class="highlighter-rouge">xlims</code> and <code class="highlighter-rouge">ylims</code>. We can grab the extent
+values from the spatial object that has a larger extent. Let’s try it.</p>
+
+<figure>
+    <a href="/images/dc-spatial-vector/spatial_extent.png">
+    <img src="/images/dc-spatial-vector/spatial_extent.png" /></a>
+    <figcaption>The spatial extent of a shapefile or R spatial object
+    represents the geographic <b> edge </b> or location that is the furthest
+    north, south, east and west. Thus is represents the overall geographic
+    coverage of the spatial object. Source: National Ecological Observatory
+    Network (NEON)
+    </figcaption>
+</figure>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>plotLoc.extent &lt;- st_bbox(plot_locations_sp_HARV)
+plotLoc.extent
+</code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     xmin      ymin      xmax      ymax 
+ 731405.3 4712845.0  732275.3 4713846.3 
+</code></pre></div></div>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># grab the x and y min and max values from the spatial plot locations layer
+xmin &lt;- plotLoc.extent[1]
+xmax &lt;- plotLoc.extent[3]
+ymin &lt;- plotLoc.extent[2]
+ymax &lt;- plotLoc.extent[4]
+
+# adjust the plot extent using x and ylim
+plot(aoi_boundary_HARV$geometry,
+     main = "NEON Harvard Forest Field Site\nModified Extent",
+     border = "darkgreen",
+     xlim = c(xmin, xmax),
+     ylim = c(ymin, ymax))
+
+plot(plot_locations_sp_HARV$geometry,
+		 col = "purple",
+		 add = TRUE)
+
+# add a legend
+legend("bottomright",
+       legend = c("Plots", "AOI Boundary"),
+       pch = c(8, NA),
+       lty = c(NA, 1),
+       bty = "n",
+       col = c("purple", "darkgreen"),
+       cex = .8)
+</code></pre></div></div>
+
+<p><img src="../fig/rmd-10-set-plot-extent-1.png" title="plot of chunk set-plot-extent" alt="plot of chunk set-plot-extent" style="display: block; margin: auto;" /></p>
+
+<blockquote class="challenge">
+  <h2 id="challenge---import--plot-additional-points">Challenge - Import &amp; Plot Additional Points</h2>
+
+  <p>We want to add two phenology plots to our existing map of vegetation plot
+locations.</p>
+
+  <p>Import the .csv: <code class="highlighter-rouge">HARV/HARV_2NewPhenPlots.csv</code> into <code class="highlighter-rouge">R</code> and do the following:</p>
+
+  <ol>
+    <li>Find the X and Y coordinate locations. Which value is X and which value is Y?</li>
+    <li>These data were collected in a geographic coordinate system (WGS84). Convert
+the <code class="highlighter-rouge">data.frame</code> into an <code class="highlighter-rouge">sf</code> object.</li>
+    <li>Plot the new points with the plot location points from above. Be sure to add
+a legend. Use a different symbol for the 2 new points!  You may need to adjust
+the X and Y limits of your plot to ensure that both points are rendered by <code class="highlighter-rouge">R</code>!</li>
+  </ol>
+
+  <p>If you have extra time, feel free to add roads and other layers to your map!</p>
+
+  <p>HINT: Refer to
+<a href="/R/vector-data-reproject-crs-R/">When Vector Data Don’t Line Up - Handling Spatial Projection &amp; CRS in R</a>
+for more on working with geographic coordinate systems. You may want to “borrow”
+the projection from the objects used in that tutorial!</p>
+
+  <blockquote class="solution">
+    <h2 id="answers">Answers</h2>
+
+    <div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## 1
+# Read the .csv file
+newplot_locations_HARV &lt;-
+  read.csv("data/NEON-DS-Site-Layout-Files/HARV/HARV_2NewPhenPlots.csv",
+           stringsAsFactors = FALSE)
+
+# look at the data structure -&gt; locations in lat/long
+str(newplot_locations_HARV)
+
+## 2
+## Find/ establish a CRS for new points
+# Import the US boundary which is in a geographic WGS84 coordinate system
+country_boundary_US &lt;- st_read("data/NEON-DS-Site-Layout-Files/US-Boundary-Layers/US-Boundary-Dissolved-States.shp")
+
+# grab the geographic CRS
+geogCRS &lt;- st_crs(country_boundary_US)
+geogCRS
+
+## Convert to spatial data frame
+# note that the easting and northing columns are in columns 1 and 2
+newPlot.Sp.HARV &lt;- st_as_sf(newplot_locations_HARV, coords = c("decimalLon", "decimalLat"), crs = geogCRS)
+
+# view CRS
+st_crs(newPlot.Sp.HARV)
+
+## We now have the data imported and in WGS84 Lat/Long. We want to map with plot
+# locations in UTM so we'll have to reproject.
+
+# remember we have a UTM Zone 18N crs object from previous code
+utm18nCRS
+
+# reproject the new points into UTM using `utm18nCRS`
+newPlot.Sp.HARV.UTM &lt;- st_transform(newPlot.Sp.HARV,
+                                  utm18nCRS)
+# check new plot CRS
+st_crs(newPlot.Sp.HARV.UTM)
+
+## 3
+# create plot
+plot(plot_locations_sp_HARV$geometry,
+     main = "NEON Harvard Forest Field Site \nPlot Locations" )
+
+plot(newPlot.Sp.HARV.UTM$geometry,
+     add = TRUE,  pch=20, col = "darkgreen")
+</code></pre></div>    </div>
+
+    <p><img src="../fig/rmd-10-challenge-code-phen-plots-1.png" title="plot of chunk challenge-code-phen-plots" alt="plot of chunk challenge-code-phen-plots" style="display: block; margin: auto;" /></p>
+
+    <div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># oops - looks like we are missing a point on our new plot. let's compare
+# the spatial extents of both objects!
+st_bbox(plot_locations_sp_HARV)
+st_bbox(newPlot.Sp.HARV.UTM)
+
+# when you plot in base plot, if the extent isn't specified, then the data that
+# is added FIRST will define the extent of the plot
+
+plot(st_convex_hull(st_sfc(st_union(plot_locations_sp_HARV))),
+     main = "Comparison of Spatial Object Extents\nPlot Locations vs New Plot Locations")
+
+plot(st_convex_hull(st_sfc(st_union(newPlot.Sp.HARV.UTM))),
+     col = "darkgreen",
+     add = TRUE)
+</code></pre></div>    </div>
+
+    <p><img src="../fig/rmd-10-challenge-code-phen-plots-2.png" title="plot of chunk challenge-code-phen-plots" alt="plot of chunk challenge-code-phen-plots" style="display: block; margin: auto;" /></p>
+
+    <div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># looks like the green box showing the newPlot extent extends
+# beyond the plot.locations extent.
+
+# We need to grab the x min and max and y min from our original plots
+# but then the ymax from our new plots
+
+originalPlotExtent &lt;- st_bbox(plot_locations_sp_HARV)
+newPlotExtent &lt;- st_bbox(newPlot.Sp.HARV.UTM)
+
+# set xmin and max
+xmin &lt;- originalPlotExtent[1]
+xmax &lt;- originalPlotExtent[3]
+ymin &lt;- originalPlotExtent[2]
+ymax &lt;- newPlotExtent[4]
+
+# 3 again... re-plot
+# try again but this time specify the x and ylims
+# note: we could also write a function that would harvest the smallest and
+# largest
+# x and y values from an extent object. This is beyond the scope of this tutorial.
+plot(plot_locations_sp_HARV$geometry,
+     main = "NEON Harvard Forest Field Site\nVegetation &amp; Phenology Plots",
+     pch=8,
+     col = "purple",
+     xlim = c(xmin, xmax),
+     ylim = c(ymin, ymax))
+
+plot(newPlot.Sp.HARV.UTM$geometry,
+     add = TRUE,  pch=20, col = "darkgreen")
+
+# when we create a legend in R, we need to specify the text for each item
+# listed in the legend.
+legend("bottomright",
+       legend = c("Vegetation Plots", "Phenology Plots"),
+       pch = c(8, 20),
+       bty = "n",
+       col = c("purple", "darkgreen"),
+       cex = 1.3)
+</code></pre></div>    </div>
+
+    <p><img src="../fig/rmd-10-challenge-code-phen-plots-3.png" title="plot of chunk challenge-code-phen-plots" alt="plot of chunk challenge-code-phen-plots" style="display: block; margin: auto;" /></p>
+  </blockquote>
+</blockquote>
+
+<h2 id="export-a-shapefile">Export a Shapefile</h2>
+
+<p>We can write an <code class="highlighter-rouge">R</code> spatial object to a shapefile using the <code class="highlighter-rouge">st_write</code> function
+in <code class="highlighter-rouge">sf</code>. To do this we need the following arguments:</p>
+
+<ul>
+  <li>the name of the spatial object (<code class="highlighter-rouge">plot_locations_sp_HARV</code>)</li>
+  <li>the directory where we want to save our shapefile
+         (to use <code class="highlighter-rouge">current = getwd()</code> or you can specify a different path)</li>
+  <li>the name of the new shapefile  (<code class="highlighter-rouge">PlotLocations_HARV</code>)</li>
+  <li>the driver which specifies the file format (ESRI Shapefile)</li>
+</ul>
+
+<p>We can now export the spatial object as a shapefile.</p>
+
+<div class="r highlighter-rouge"><div class="highlight"><pre class="highlight"><code># write a shapefile
+st_write(plot_locations_sp_HARV,
+         "data/PlotLocations_HARV.shp", driver = "ESRI Shapefile")
+</code></pre></div></div>
+
+
+<blockquote class="keypoints">
+  <h2>Key Points</h2>
+  <ul>
+    
+    <li><p>It is important to know the projection (if any) of your point data prior to converting to a spatial object.</p>
+</li>
+    
+  </ul>
+</blockquote>
+
+</article>
+
+<div class="row">
+  <div class="col-md-1">
+    <h3>
+      
+      <a href="../09-vector-when-data-dont-line-up-crs/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
+      
+    </h3>
+  </div>
+  <div class="col-md-10">
+    
+  </div>
+  <div class="col-md-1">
+    <h3>
+      
+      <a href="../11-vector-raster-integration/"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
+      
+    </h3>
+  </div>
+</div>
+
+
+      
+      
+<footer>
+  <div class="row">
+    <div class="col-md-6" align="left">
+      <h4>
+	Copyright &copy; 2016–2018
+	
+	<a href="http://datacarpentry.org">Data Carpentry</a>
+	
+      </h4>
+    </div>
+    <div class="col-md-6" align="right">
+      <h4>
+	
+	<a href="/edit/gh-pages/_episodes/10-vector-csv-to-shapefile-in-r.md">Edit on GitHub</a>
+	
+	/
+	<a href="/blob/gh-pages/CONTRIBUTING.md">Contributing</a>
+	/
+	<a href="/">Source</a>
+	/
+	<a href="/blob/gh-pages/CITATION">Cite</a>
+	/
+	<a href="mailto:lessons@software-carpentry.org">Contact</a>
+      </h4>
+    </div>
+  </div>
+</footer>
+
+      
+    </div>
+    
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/lesson.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-37305346-2', 'auto');
+  ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
